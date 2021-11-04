@@ -2,20 +2,17 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score
 from sklearn.linear_model import LinearRegression
-house_price_data = pd.read_csv("data/HousingPrices-Amsterdam-August-2021.csv")
-# 
+house_price_data = pd.read_csv("data/HousingPrices-Amsterdam-August-2021.csv", index_col=0)
 house_price_data.dropna(inplace=True)
+print(house_price_data.head().to_string())
 
-# house_price_data["Address"] = house_price_data["Address"].str.extract("(\w|\s)+(?=,)")
-house_price_data.drop(["Unnamed: 0"], axis=1, inplace=True)
 house_price_data["Address"] = pd.factorize(house_price_data.Address)[0] + 1
 house_price_data["Zip"] = house_price_data["Zip"].str.extract("(\d+)")
-print(house_price_data.Zip.min())
-print(house_price_data.Zip.max())
+
 y = house_price_data["Price"]
-house_price_data.drop(["Price"], axis=1, inplace=True)
+X = house_price_data[["Address", "Zip", "Area", "Room", "Lon", "Lat"]]
 # house_price_data.drop(["Zip"], axis=1, inplace=True)
-X_train, X_test, y_train, y_test = train_test_split(house_price_data, y, test_size=3/10.0, random_state=0)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=3/10.0, random_state=0)
 
 model = LinearRegression()
 model.fit(X_train, y_train)
