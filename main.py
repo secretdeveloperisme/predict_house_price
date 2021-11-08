@@ -11,7 +11,6 @@ house_price_data["Zip"] = house_price_data["Zip"].str.extract("(\d+)")
 
 y = house_price_data["Price"]
 X = house_price_data[["Address", "Zip", "Area", "Room", "Lon", "Lat"]]
-# house_price_data.drop(["Zip"], axis=1, inplace=True)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=3/10.0, random_state=0)
 
 model = LinearRegression()
