@@ -118,8 +118,17 @@ class LinearRegression:
             y_pred[index] = (y_pred[index] * max_min) + mean
         return y_pred
 
-    def r2_score(self, x, y):
-        pass
+    def r2_score(self, x_true, y_true):
+        y_pred = self.predict(x_true)
+        # print(r2_score(y_true, y_pred))
+        # mean = np.average(y_true)
+        # ss_res = np.sum((y_true - y_pred)**2)
+        # ss_tot = np.sum((y_true - mean)**2)
+        # print(ss_res, ss_tot)
+        # r_squared_score = (ss_res/ss_tot)
+        # print(r_squared_score)
+        return r2_score(y_true, y_pred)
+
 
 
 if __name__ == '__main__':
@@ -135,7 +144,8 @@ if __name__ == '__main__':
         X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=3 / 10.0, random_state=i)
         model = LinearRegression()
         model.fit_stochastic(np.float64(X_train), np.float64(y_train))
-        y_pred = model.predict(np.float64(X_test))
+        # y_pred = model.predict(np.float64(X_test))
         # print(y_test)
         # print(y_pred)
-        print("accuracy={}%".format(round(r2_score(y_true=y_test, y_pred=y_pred)*100, 3)))
+        model.r2_score(X_test, y_test)
+        # print("accuracy={}%".format(round(r2_score(y_true=y_test, y_pred=y_pred)*100, 3)))
