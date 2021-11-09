@@ -128,7 +128,7 @@ class LinearRegression:
 
 
 if __name__ == '__main__':
-    house_price_data = pd.read_csv("../data/HousingPrices-Amsterdam-August-2021.csv", index_col=0)
+    house_price_data = pd.read_csv("data/HousingPrices-Amsterdam-August-2021.csv", index_col=0)
     house_price_data.dropna(inplace=True)
     house_price_data["Address"] = pd.factorize(house_price_data.Address)[0] + 1
     house_price_data["Zip"] = house_price_data["Zip"].str.extract("(\d+)").astype(float)
