@@ -2,7 +2,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score
 from sklearn.linear_model import LinearRegression
-house_price_data = pd.read_csv("data/HousingPrices-Amsterdam-August-2021.csv", index_col=0)
+house_price_data = pd.read_csv("../data/HousingPrices-Amsterdam-August-2021.csv", index_col=0)
 house_price_data.dropna(inplace=True)
 print(house_price_data.head().to_string())
 
@@ -17,7 +17,7 @@ model = LinearRegression()
 model.fit(X_train, y_train)
 print("predict a test dataset: ", model.predict(X_test.head(1)))
 print("real value", y_test.head(1))
-# print(model.coef_)
-# print(model.intercept_)
+print(model.coef_)
+print(model.intercept_)
 print("Score :", round(model.score(X_test, y_test)*100, ndigits=2), "%")
 print("r2 score: ", r2_score(y_test,  model.predict(X_test)))

@@ -3,13 +3,14 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score
 
+
 class LinearRegression:
     def __init__(self):
         self.coef_ = np.array([])
-        self.intercept_ = 0
+        self.intercept_ = 0.001
         self.eta = 0.001
         self.x = np.array([])
-        self.y =np.array([])
+        self.y = np.array([])
 
     def feature_scaling(self, x):
         n = len(x[0, :])
@@ -32,7 +33,7 @@ class LinearRegression:
         self.y = y.copy()
         m = len(x)
         n = len(x[0, :])
-        self.coef_ = np.random.rand(n)
+        self.coef_ = np.zeros((1, 5))
         print("theta0=", self.intercept_)
         print("thetaj=", self.coef_)
         x = self.feature_scaling(x)
@@ -40,19 +41,15 @@ class LinearRegression:
         while True:
             for i in range(m):
                 h_i = np.sum(self.coef_*x[i, ]) + self.intercept_
-                # print(h_i)
                 previous_theta0 = self.intercept_
                 previous_theta = self.coef_.copy()
                 self.intercept_ -= self.eta*(h_i - y[i]) * 1
                 self.coef_ -= self.eta*(h_i - y[i]) * x[i, ]
-                # print(self.intercept_)
-                # print(self.coef_)
                 delta = np.abs(np.subtract(previous_theta, self.coef_))
                 filter_delta = self.coef_[np.where(delta > pow(10, -10))]
-                # print(filter_delta.size)
-                # print("="*50)
-                # print(np.abs(np.subtract(previous_theta, self.coef_)))
                 if abs(previous_theta0 - self.intercept_) < pow(10, -10) and filter_delta.size <= 0:
+                    print("theta0=", self.intercept_)
+                    print("thetaj=", self.coef_)
                     return
 
     # def fit_batch(self, x, y):
@@ -130,9 +127,8 @@ class LinearRegression:
         return r2_score(y_true, y_pred)
 
 
-
 if __name__ == '__main__':
-    house_price_data = pd.read_csv("data/HousingPrices-Amsterdam-August-2021.csv", index_col=0)
+    house_price_data = pd.read_csv("../data/HousingPrices-Amsterdam-August-2021.csv", index_col=0)
     house_price_data.dropna(inplace=True)
     house_price_data["Address"] = pd.factorize(house_price_data.Address)[0] + 1
     house_price_data["Zip"] = house_price_data["Zip"].str.extract("(\d+)").astype(float)
@@ -140,12 +136,9 @@ if __name__ == '__main__':
     Y = np.array(house_price_data["Price"])
     X = np.array(house_price_data[["Zip", "Area", "Room", "Lon", "Lat"]])
     # print(house_price_data.head().to_string())
-    for i in range(5):
+    for i in range(10):
         X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=3 / 10.0, random_state=i)
         model = LinearRegression()
         model.fit_stochastic(np.float64(X_train), np.float64(y_train))
-        # y_pred = model.predict(np.float64(X_test))
-        # print(y_test)
-        # print(y_pred)
-        model.r2_score(X_test, y_test)
-        # print("accuracy={}%".format(round(r2_score(y_true=y_test, y_pred=y_pred)*100, 3)))
+        print("accuracy={}%".format(round(model.r2_score(X_test, y_test)*100, 3)))
+        print("="*50)

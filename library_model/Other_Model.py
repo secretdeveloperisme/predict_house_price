@@ -7,7 +7,7 @@ from sklearn.linear_model import Ridge
 from sklearn.linear_model import Lasso
 from sklearn.linear_model import ElasticNet
 from sklearn.linear_model import BayesianRidge
-housing_price_data = pd.read_csv("data/HousingPrices-Amsterdam-August-2021.csv")
+housing_price_data = pd.read_csv("../data/HousingPrices-Amsterdam-August-2021.csv")
 
 # clean data
 housing_price_data.dropna(inplace=True)
@@ -18,11 +18,11 @@ y = housing_price_data["Price"]
 housing_price_data.drop(["Price"], axis=1, inplace=True)
 
 
-mse_file = open("Evaluate/evaluate_models.csv", mode="w", newline="")
+mse_file = open("../evaluate/evaluate_models.csv", mode="w", newline="")
 fieldnames = ['Loop', 'LinearRegression', 'Ridge', 'Lasso', 'ElasticNet', 'BayesianRidge']
 mse_csv = csv.DictWriter(mse_file, fieldnames=fieldnames)
 mse_csv.writeheader()
-score_file = open("Evaluate/evaluate_score.csv", mode="w", newline="")
+score_file = open("../evaluate/evaluate_score.csv", mode="w", newline="")
 score_csv = csv.DictWriter(score_file, fieldnames=fieldnames)
 score_csv.writeheader()
 for i in range(10):
