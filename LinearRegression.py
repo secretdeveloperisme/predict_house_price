@@ -36,15 +36,15 @@ class LinearRegression:
         self.coef_ = np.zeros((1, 5))
         print("theta0=", self.intercept_)
         print("thetaj=", self.coef_)
-        x = self.feature_scaling(x)
-        y = self.y_scaling(y)
+        x_scaling = self.feature_scaling(x)
+        y_scaling = self.y_scaling(y)
         while True:
             for i in range(m):
-                h_i = np.sum(self.coef_*x[i, ]) + self.intercept_
+                h_i = np.sum(self.coef_*x_scaling[i, ]) + self.intercept_
                 previous_theta0 = self.intercept_
                 previous_theta = self.coef_.copy()
-                self.intercept_ -= self.eta*(h_i - y[i]) * 1
-                self.coef_ -= self.eta*(h_i - y[i]) * x[i, ]
+                self.intercept_ -= self.eta*(h_i - y_scaling[i]) * 1
+                self.coef_ -= self.eta*(h_i - y_scaling[i]) * x_scaling[i, ]
                 delta = np.abs(np.subtract(previous_theta, self.coef_))
                 filter_delta = self.coef_[np.where(delta > pow(10, -10))]
                 if abs(previous_theta0 - self.intercept_) < pow(10, -10) and filter_delta.size <= 0:
