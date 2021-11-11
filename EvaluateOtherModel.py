@@ -29,7 +29,7 @@ score_file = open("evaluate/evaluate_r_squared.csv", mode="w", newline="")
 score_csv = csv.DictWriter(score_file, fieldnames=fieldnames)
 score_csv.writeheader()
 for i in range(10):
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=3 / 10.0, random_state=777+i)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=3 / 10.0, random_state=i)
     linear_model = LinearRegression()
     ridge_model = Ridge()
     lasso_model = Lasso()
@@ -48,7 +48,7 @@ for i in range(10):
     elastic_mse = mean_squared_error(y_true=y_test, y_pred=elastic_model.predict(X_test))
     br_mse = mean_squared_error(y_true=y_test, y_pred=br_model.predict(X_test))
 
-    linear_score = linear_model.r2_score(X_test, y_test)
+    linear_score = linear_model.r2_score(y_test, linear_model.predict(X_test))
     ridge_score = ridge_model.score(X_test, y_test)
     lasso_score = lasso_model.score(X_test, y_test)
     elastic_score = elastic_model.score(X_test, y_test)
