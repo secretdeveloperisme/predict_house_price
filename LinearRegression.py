@@ -113,18 +113,21 @@ class LinearRegression:
         for index, x in enumerate(features_scale):
             y_pred[index] = (np.sum(x*self.coef_) + self.intercept_)
             y_pred[index] = (y_pred[index] * max_min) + mean
-        return y_pred
+        return y_pred.reshape(-1)
 
-    def r2_score(self, x_true, y_true):
-        y_pred = self.predict(x_true)
-        # print(r2_score(y_true, y_pred))
-        # mean = np.average(y_true)
-        # ss_res = np.sum((y_true - y_pred)**2)
-        # ss_tot = np.sum((y_true - mean)**2)
-        # print(ss_res, ss_tot)
-        # r_squared_score = (ss_res/ss_tot)
-        # print(r_squared_score)
-        return r2_score(y_true, y_pred)
+    def mse_score(self, y_true, y_pred):
+        y_true = np.array(y_true)
+        y_pred = np.array(y_pred)
+        mse = np.average((y_true - y_pred)**2)
+        return mse
+
+    def r2_score(self,y_true, y_pred):
+        y_true = np.array(y_true, dtype=np.float64)
+        y_pred = np.array(y_pred, dtype=np.float64)
+        ss_res = ((y_true - y_pred) ** 2).sum(axis=0)
+        ss_tot = ((y_true - np.average(y_true)) ** 2).sum(axis=0)
+        r_squared_score = 1 - np.average(ss_res / ss_tot)
+        return r_squared_score
 
 
 if __name__ == '__main__':
@@ -136,9 +139,13 @@ if __name__ == '__main__':
     Y = np.array(house_price_data["Price"])
     X = np.array(house_price_data[["Zip", "Area", "Room", "Lon", "Lat"]])
     # print(house_price_data.head().to_string())
-    for i in range(10):
+    for i in range(2):
         X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=3 / 10.0, random_state=i)
         model = LinearRegression()
         model.fit_stochastic(np.float64(X_train), np.float64(y_train))
-        print("accuracy={}%".format(round(model.r2_score(X_test, y_test)*100, 3)))
+        y_pred = model.predict(X_test)
+        print(y_test)
+        print(y_pred)
+        print(r2_score(y_test, y_pred))
+        print("accuracy={}%".format(np.round(model.r2_score(y_test, y_pred)*100, 3)))
         print("="*50)
