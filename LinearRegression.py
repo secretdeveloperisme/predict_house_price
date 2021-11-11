@@ -12,13 +12,15 @@ class LinearRegression:
         self.x = np.array([])
         self.y = np.array([])
 
-    def feature_scaling(self, x):
+    def feature_scaling(self, features):
+        x = features.copy()
         n = len(x[0, :])
         for i in range(n):
             if x[0, i] > 1:
                 max_min = float(x[:, i].max() - x[:, i].min())
                 x[:, i] = (x[:, i] - x[:, i].mean()) / max_min
         return x.copy()
+
 
     def y_scaling(self, y):
         n = len(y)
@@ -121,7 +123,7 @@ class LinearRegression:
         mse = np.average((y_true - y_pred)**2)
         return mse
 
-    def r2_score(self,y_true, y_pred):
+    def r2_score(self, y_true, y_pred):
         y_true = np.array(y_true, dtype=np.float64)
         y_pred = np.array(y_pred, dtype=np.float64)
         ss_res = ((y_true - y_pred) ** 2).sum(axis=0)
@@ -139,13 +141,12 @@ if __name__ == '__main__':
     Y = np.array(house_price_data["Price"])
     X = np.array(house_price_data[["Zip", "Area", "Room", "Lon", "Lat"]])
     # print(house_price_data.head().to_string())
-    for i in range(2):
+    for i in range(3):
         X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=3 / 10.0, random_state=i)
         model = LinearRegression()
         model.fit_stochastic(np.float64(X_train), np.float64(y_train))
         y_pred = model.predict(X_test)
-        print(y_test)
-        print(y_pred)
+        print(X_test,y_test)
         print(r2_score(y_test, y_pred))
         print("accuracy={}%".format(np.round(model.r2_score(y_test, y_pred)*100, 3)))
         print("="*50)
