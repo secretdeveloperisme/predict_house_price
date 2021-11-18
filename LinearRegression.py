@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import r2_score
 
 
 class LinearRegression:
@@ -135,11 +134,15 @@ if __name__ == '__main__':
     # get X, Y
     Y = np.array(house_price_data["Price"])
     X = np.array(house_price_data[["Zip", "Area", "Room", "Lon", "Lat"]])
-    for i in range(5):
-        X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=3 / 10.0, random_state=i)
-        model = LinearRegression(eta=0.001)
+    total_accurancy = 0
+    for i in range(0, 10):
+        X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=3 / 10.0, random_state=i+20)
+        model = LinearRegression(eta=0.001, intercept_=1)
         model.fit_stochastic(np.float64(X_train), np.float64(y_train))
         y_pred = model.predict(X_test)
-        print(r2_score(y_test, y_pred))
-        print("accuracy={}%".format(np.round(model.r2_score(y_test, y_pred)*100, 3)))
+        accuracy = np.round(model.r2_score(y_test, y_pred)*100, 3)
+        total_accurancy += accuracy
+        print("accuracy={}%".format(accuracy))
         print("="*50)
+    print("="*50)
+    print("average accuracy: {} %".format(np.round(total_accurancy/10, 3)))
