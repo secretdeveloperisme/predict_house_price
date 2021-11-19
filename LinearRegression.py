@@ -44,6 +44,7 @@ class LinearRegression:
         n = len(x_train[0, :])
         # init theta : 1 -> n
         self.coef_ = np.zeros((n), dtype=np.float64)
+        print("Previous Theta:")
         print("theta0=", self.intercept_)
         print("thetaj=", self.coef_)
         # scale values features and label
@@ -66,6 +67,7 @@ class LinearRegression:
                 filter_delta = self.coef_[np.where(delta > pow(10, -10))]
                 # check convergence
                 if abs(previous_theta0 - self.intercept_) < pow(10, -10) and filter_delta.size <= 0:
+                    print("Current Theta:")
                     print("theta0=", self.intercept_)
                     print("thetaj=", self.coef_)
                     return
@@ -113,9 +115,9 @@ if __name__ == '__main__':
     # get features and label
     Y = np.array(house_price_data["Price"])
     X = np.array(house_price_data[["Zip", "Area", "Room", "Lon", "Lat"]])
-    #
     total_accuracy = 0
     for i in range(0, 10):
+        print("=" * 50 + "Loop:" + str(i) + "=" * 50)
         X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=3 / 10.0, random_state=i+20)
         model = LinearRegression(eta=0.001, intercept_=1)
         model.fit_stochastic(np.float64(X_train), np.float64(y_train))
@@ -123,6 +125,5 @@ if __name__ == '__main__':
         accuracy = np.round(model.r2_score(y_test, y_pred)*100, 3)
         total_accuracy += accuracy
         print("accuracy={}%".format(accuracy))
-        print("="*50)
-    print("="*50)
+    print("="*100)
     print("average accuracy: {} %".format(np.round(total_accuracy/10, 3)))
