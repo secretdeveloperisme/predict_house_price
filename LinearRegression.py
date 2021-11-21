@@ -3,6 +3,10 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 
 
+#####################################################################
+#                         Linear Regression                         #
+#####################################################################
+
 class LinearRegression:
     # constructor
     def __init__(self, eta=0.001, intercept_=0):
@@ -12,7 +16,7 @@ class LinearRegression:
         self.x_train = np.array([])
         self.y_train = np.array([])
     """
-       x = (x - mean(x))/(max(x) -  min(x))
+       x_changed = (x - mean(x))/(max(x) -  min(x))
     """
     def feature_scaling(self, features):
         x = features.copy()
@@ -24,7 +28,7 @@ class LinearRegression:
                 x[:, i] = (x[:, i] - x[:, i].mean()) / max_min
         return x.copy()
     """
-      y = (y - mean(y))/(max(y) -  min(y))
+      y_changed = (y - mean(y))/(max(y) -  min(y))
     """
     def y_scaling(self, y):
         n = len(y)
@@ -39,7 +43,7 @@ class LinearRegression:
         # copy origin values
         self.x_train = x_train.copy()
         self.y_train = y_train.copy()
-        # get number of datasets , number of features
+        # get number of datasets, number of features
         m = len(x_train)
         n = len(x_train[0, :])
         # init theta : 1 -> n
@@ -94,7 +98,7 @@ class LinearRegression:
         mse = np.average((y_true - y_pred)**2)
         return mse
     """
-        r2 = 1 - ((y_true - y_pred)^2)/(y_true - y_mean)^2
+        r2 = 1 - ((y_true - y_pred)^2)/(y_true - y_mean)^2)
     """
     def r2_score(self, y_true, y_pred):
         y_true = np.array(y_true, dtype=np.float64)
@@ -111,7 +115,10 @@ if __name__ == '__main__':
     house_price_data.dropna(inplace=True)
     house_price_data.drop(axis=1, columns="Address", inplace=True)
     house_price_data["Zip"] = house_price_data["Zip"].str.extract("(\d+)").astype(float)
+    print("#"*50 + "Origin data" + "#"*50)
     print(house_price_data.head().to_string())
+    print("#"*50 + "Scaling data" + "#"*50)
+    print(LinearRegression().feature_scaling(np.array(house_price_data))[0:5])
     # get features and label
     Y = np.array(house_price_data["Price"])
     X = np.array(house_price_data[["Zip", "Area", "Room", "Lon", "Lat"]])
@@ -122,8 +129,10 @@ if __name__ == '__main__':
         model = LinearRegression(eta=0.001, intercept_=1)
         model.fit_stochastic(np.float64(X_train), np.float64(y_train))
         y_pred = model.predict(X_test)
+        mse_score = model.mse_score(y_test,y_pred)
         accuracy = np.round(model.r2_score(y_test, y_pred)*100, 3)
         total_accuracy += accuracy
+        print("MSE:", mse_score)
         print("accuracy={}%".format(accuracy))
     print("="*100)
     print("average accuracy: {} %".format(np.round(total_accuracy/10, 3)))
